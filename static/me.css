@@ -1,0 +1,85 @@
+body{
+	background: #F2F3F8;
+}
+
+.notice{
+  moz-transition: border 200ms;
+  -o-transition: border 200ms;
+  -webkit-transition: border 200ms;
+  transition: border 200ms;
+  width: 210px;
+  height: 355px;
+  border: 4px solid white;
+  box-shadow: 3px 3px 0px 0px rgba(0,0,0,0.1);
+  position: relative;
+  font-size: 11pt;
+  color: #003469;
+  float: left;
+  margin-right: 30px;
+	
+}
+
+
+.notice-date{
+  border-radius: 1000px;
+  width: 60px;
+  height: 60px;
+  line-height: 62px;
+  vertical-align: middle;
+  text-align: center;
+  background: #fff;
+  box-shadow: 2px 2px #9fa7af;
+  position: absolute;
+  top: -28px;
+  left: 71px;
+}
+.notice-img{
+	background-image: url('/Blog2.0/Class/Home/View/Studio/1.jpg');
+	width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 0px 1px rgba(0,0,0,0.1);
+   
+}
+.label-tip{
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 20px solid #fff;
+    font-size:0;
+    margin:-86px auto;
+    position:relative;
+    z-index:111;
+    transition: margin 200ms,color 200ms;
+   
+}
+.notice-label{
+  moz-transition: padding-bottom 200ms,background 200ms,color 200ms;
+  -o-transition: padding-bottom 200ms,background 200ms,color 200ms;
+  -webkit-transition: padding-bottom 200ms,background 200ms,color 200ms;
+  transition: padding-bottom 200ms,background 200ms,color 200ms;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background: white;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  box-shadow: 0 -4px rgba(0,0,0,0.2);
+  z-index:1;
+}
+.notice-bottom{
+  border-radius: 1000px;
+  width: 60px;
+  height: 60px;
+  line-height: 62px;
+  vertical-align: middle;
+  text-align: center;
+  background: #ffffff;
+  box-shadow: 2px 2px #9fa7af;
+  position: absolute;
+  bottom: -28px;
+  left: 71px;
+  transition:transform 200ms;
+  z-index:11;
+}
