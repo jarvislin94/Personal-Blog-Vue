@@ -10,24 +10,13 @@
           <li class="nav-item active">
             <a class="nav-link" href="#">主页 <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item" v-for="(list,index) in lists" v-if="list.pid==0">
-            <router-link to="/category/:1" class="nav-link" >{{list.name}}</router-link>
+          <li class="nav-item" v-for="(list,index) in lists" v-if="list.pid==0&&list.child==0">
+            <router-link :to="{ name: 'category',params: {id:list.id} }" class="nav-link" >{{list.name}}</router-link>
           </li>
-          <li class="nav-item">
-            <router-link to="/category/:1" class="nav-link">学习</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/category/:1" class="nav-link">娱乐</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/category/:1" class="nav-link">科技</router-link>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">大学</a>
+          <li class="nav-item dropdown" v-for="(list,index) in lists" v-if="list.pid==0&&list.child!=0">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{list.name}}</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="#">大一</a>
-              <a class="dropdown-item" href="#">大二</a>
-              <a class="dropdown-item" href="#">大三</a>
+              <router-link :to="{name: 'category',params: {id:list1.id}}" v-for="(list1,index) in list.child" class="dropdown-item">{{list1.name}}</router-link>
             </div>
           </li>
         </ul>
@@ -57,14 +46,22 @@
         xhr.onreadystatechange = function(){
           if(xhr.readyState == 4){
             if(xhr.status == 200){
-              self.lists = JSON.parse(xhr.responseText).data;
-              console.log(this.lists);
-
+              var data = JSON.parse(xhr.responseText).data;
+              for(var i = 0;i<data.length;i++){
+                var arr = [];
+                for(var ii = 0;ii<data.length;ii++){    
+                   if(data[i].id == data[ii].pid){
+                      arr.push(data[ii]);
+                    }
+                }
+                data[i].child = arr;
+              }
+              self.lists = data;  
             }
           }
         }
         xhr.send();
-      }
+      },
     }
 	}
 </script>
