@@ -2,62 +2,20 @@
 <div class="col-md-9">
 <ol class="breadcrumb">
   <li class="breadcrumb-item"><a href="#">首页</a></li>
-  <li class="breadcrumb-item"><a href="#">数码科技</a></li>
-  <li class="breadcrumb-item active">直播</li>
+  <li class="breadcrumb-item"><a href="#">{{parentTitle}}</a></li>
+  <li class="breadcrumb-item active" v-if="ok !=null">{{lists[0].category}}</li>
 </ol>
 <div class="article-list" >
-	<dl>
+	<dl v-for="(list,index) in lists">
 		<div class="title">
-			<router-link to="/detail">直播结束｜到底要删除什么？魅蓝 E2 新品发布会</router-link>
-			<span class="time">2017-05-20</span>
+			<router-link :to="{ name: 'detail',params:{ id:list.id } }">{{list.title}}</router-link>
+			<span class="time">{{list.create_time}}</span>
 		</div>
 		<div class="content">
 			<p>
-				2016 年 8 月，魅蓝 E 首次亮相，不同于其他魅蓝手机外形的千篇一律，魅蓝 E 在外观上有着较大的差异性，相信此次魅蓝 E2 也会在机身外观上做出一些改变。
+				{{list.content}}
 			</p>
 			
-		</div>
-		<div class="more">
-			<router-link to="/detail">阅读全文</router-link>
-		</div>
-	</dl>
-	<dl>
-		<div class="title">
-			<router-link to="/detail">直播结束｜到底要删除什么？魅蓝 E2 新品发布会</router-link>
-			<span class="time">2017-05-20</span>
-		</div>
-		<div class="content">
-			<p>
-				2016 年 8 月，魅蓝 E 首次亮相，不同于其他魅蓝手机外形的千篇一律，魅蓝 E 在外观上有着较大的差异性，相信此次魅蓝 E2 也会在机身外观上做出一些改变。
-			</p>
-		</div>
-		<div class="more">
-			<router-link to="/detail">阅读全文</router-link>
-		</div>
-	</dl>
-	<dl>
-		<div class="title">
-			<router-link to="/detail">直播结束｜到底要删除什么？魅蓝 E2 新品发布会</router-link>
-			<span class="time">2017-05-20</span>
-		</div>
-		<div class="content">
-			<p>
-				2016 年 8 月，魅蓝 E 首次亮相，不同于其他魅蓝手机外形的千篇一律，魅蓝 E 在外观上有着较大的差异性，相信此次魅蓝 E2 也会在机身外观上做出一些改变。
-			</p>
-		</div>
-		<div class="more">
-			<router-link to="/detail">阅读全文</router-link>
-		</div>
-	</dl>
-	<dl>
-		<div class="title">
-			<router-link to="/detail">直播结束｜到底要删除什么？魅蓝 E2 新品发布会</router-link>
-			<span class="time">2017-05-20</span>
-		</div>
-		<div class="content">
-			<p>
-				2016 年 8 月，魅蓝 E 首次亮相，不同于其他魅蓝手机外形的千篇一律，魅蓝 E 在外观上有着较大的差异性，相信此次魅蓝 E2 也会在机身外观上做出一些改变。
-			</p>
 		</div>
 		<div class="more">
 			<router-link to="/detail">阅读全文</router-link>
@@ -73,7 +31,74 @@
 		},
 		data() {
 			return {
-				
+				lists:[],
+				parentTitle:"",
+				ok:null
+			}
+		},
+		watch:{
+			'$route' (to,from){
+				this.getCategory();	
+				this.getParentTitle();
+			},
+			
+		},
+		mounted() {
+		  this.$nextTick(function () {
+		    this.getCategory();
+		    this.getParentTitle();
+		  });
+		},//el 被新创建的 vm.$el 替换，并挂载到实例上去之后调用该钩子。
+		methods:{
+			getCategory(){
+				var self = this;
+				var id = this.$route.params.id;
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET","../../static/mock/detail.json",false);
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState == 4 && xhr.status == 200){
+						self.lists = [];
+						var data = JSON.parse(xhr.responseText).data;
+						data.forEach(function(x,index,data){
+							if(x.category_id == id){
+								x.create_time = new Date(parseInt(x.create_time)*1000).toLocaleString().replace(/:\d{1,2}$/,'');
+								self.lists.push(x);
+								self.ok = true;
+							}
+						})
+					}
+				}
+				xhr.send();	
+				console.log(self.lists)
+			},
+			getParentTitle(){
+				var self = this;
+				var id = this.$route.params.id;
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET","../../static/mock/nav.json",false);
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState == 4 && xhr.status == 200){
+						self.parentTitle = '';
+						var data = JSON.parse(xhr.responseText).data;
+						data.forEach(function(x,index,data){
+							if(x.id == id){
+								if(x.pid == 0){
+									self.parentTitle = x.name;
+									self.ok = null;
+								}else{
+									for(let i of data){
+										if(i.id == x.pid){
+											self.parentTitle = i.name;
+										}
+									}
+								}
+								
+							}
+						})
+					}
+				}
+				xhr.send();	
+				console.log(self.parentTitle);
 			}
 		}
 	}
